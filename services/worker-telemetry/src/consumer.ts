@@ -1,7 +1,7 @@
 import * as amqp from 'amqplib';
 import { env } from './config/env.js';
-import { saveTelemetryHistory } from './db/postgres.js';
-import { updateVehicleState } from './db/redis.js';
+import { ensureVehicleExists, saveTelemetryHistory } from './db/postgres.js';
+import { updateVehicleState, publishVehicleUpdate } from './db/redis.js';
 
 const EXCHANGE = 'fleet.events';
 const QUEUE = 'telemetry.raw.queue';
@@ -42,8 +42,10 @@ try {
           }
 
           // Processamento: salva no Postgres e atualiza Redis
+          await ensureVehicleExists(data.vehicleId); // Garante que o veículo existe
           await saveTelemetryHistory(data);
           await updateVehicleState(data);
+          await publishVehicleUpdate(data);
 
           console.log(`✅ Processado veículo ${data.vehicleId} em ${new Date(data.timestamp).toLocaleTimeString()}`);
 
