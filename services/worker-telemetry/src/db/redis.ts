@@ -43,5 +43,6 @@ export async function updateVehicleState(data: {
 
 
 export async function publishVehicleUpdate(data: any ){
+      console.log('📤 Publicando no Redis:', data.vehicleId);
       await redisClient.publish('vehicle.update', JSON.stringify(data))
 }

@@ -9,9 +9,11 @@ export function startWebSocketServer() {
   const httpServer = createServer();
   io = new SocketIOServer(httpServer, {
     cors: {
-      origin: '*',
+      origin: '../../frontend', // Ajuste para permitir conexões do frontend
       methods: ['GET', 'POST'],
     },
+    pingTimeout: 60000, // 60 segundos
+    pingInterval: 25000, // 25 segundos
   });
 
   io.on('connection', (socket) => {
