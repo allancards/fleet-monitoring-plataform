@@ -36,6 +36,12 @@ export async function updateVehicleState(data: {
     lastUpdate: data.timestamp,
   });
 
+
   // Expira após 5 minutos se o veículo parar de enviar dados
   await redisClient.setEx(key, 300, value);
+}
+
+
+export async function publishVehicleUpdate(data: any ){
+      await redisClient.publish('vehicle.update', JSON.stringify(data))
 }
