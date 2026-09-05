@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # Banco Relacional + Extensão Espacial PostGIS
+  # ==========================================
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: fleet_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fleet_user
+      POSTGRES_PASSWORD: fleet_password
+      POSTGRES_DB: fleet_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fleet_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fleet_user -d fleet_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # Cache e Estado Instantâneo em Tempo Real
+  # ==========================================
+  redis:
+    image: redis:7.2-alpine
+    container_name: fleet_redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel notice
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - fleet_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # Broker de Mensageria: RabbitMQ + Painel UI
+  # ==========================================
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: fleet_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: fleet_admin
+      RABBITMQ_DEFAULT_PASS: fleet_password
+    ports:
+      - "5672:5672"    # Porta AMQP (Producers / Consumers)
+      - "15672:15672"  # Painel HTTP de Gerenciamento
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - fleet_network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  fleet_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
