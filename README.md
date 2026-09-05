@@ -173,12 +173,12 @@ Uma plataforma completa de monitoramento de frotas veiculares em tempo real, bas
 🗄️ Estrutura do Banco de Dados
 - Tabela vehicles
 
-Coluna	    Tipo	            Descrição
-id	      VARCHAR(36) PK	    Identificador do veículo
-plate	    VARCHAR(20)	        Placa
-model	    VARCHAR(100)	      Modelo
-status	   VARCHAR(20)	  ACTIVE / INACTIVE
-created_at	TIMESTAMPTZ	    Data de cadastro
+Coluna	Tipo	Descrição
+id	VARCHAR(36) PK	Identificador único do veículo
+plate	VARCHAR(20) NOT NULL	Placa do veículo (única)
+model	VARCHAR(100) NOT NULL	Modelo do veículo
+status	VARCHAR(20) DEFAULT 'ACTIVE'	Situação do veículo
+created_at	TIMESTAMPTZ DEFAULT NOW()	Data de cadastro
 
 
 - Tabela telemetry_history
@@ -232,23 +232,31 @@ fleet-monitoring-platform/
 ├── .env.example
 ├── .gitignore
 ├── README.md
-│
 ├── services/
-│   ├── api-gateway/          # Fastify + Zod + RabbitMQ publisher
+│   ├── api-gateway/
 │   │   ├── src/
+│   │   │   ├── config/
+│   │   │   │   └── env.ts
+│   │   │   ├── schemas/
+│   │   │   │   └── telemetry.schema.ts
+│   │   │   ├── services/
+│   │   │   │   └── rabbitmq.ts
+│   │   │   ├── routes/
+│   │   │   │   └── telemetry.route.ts
+│   │   │   └── server.ts
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   │
-│   ├── worker-telemetry/     # Consome fila, salva no PostgreSQL e Redis
+│   ├── worker-telemetry/
 │   │   ├── src/
 │   │   │   ├── config/
 │   │   │   ├── db/
+│   │   │   │   ├── postgres.ts
+│   │   │   │   └── redis.ts
 │   │   │   ├── consumer.ts
 │   │   │   └── index.ts
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   │
-│   ├── worker-alerts/        # WebSocket (Socket.IO) + Redis Pub/Sub + regras
+│   ├── worker-alerts/
 │   │   ├── src/
 │   │   │   ├── config/
 │   │   │   ├── redis/
@@ -257,12 +265,15 @@ fleet-monitoring-platform/
 │   │   │   └── index.ts
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   │
-│   └── frontend-web/         # React + Vite + Leaflet + Socket.IO
+│   └── frontend-web/
 │       ├── src/
 │       │   ├── components/
+│       │   │   ├── Map.tsx
+│       │   │   └── AlertsPanel.tsx
 │       │   ├── hooks/
+│       │   │   └── useSocket.ts
 │       │   ├── services/
+│       │   │   └── socket.ts
 │       │   ├── types/
 │       │   ├── App.tsx
 │       │   └── main.tsx
@@ -270,9 +281,8 @@ fleet-monitoring-platform/
 │       ├── package.json
 │       ├── vite.config.ts
 │       └── tsconfig.json
-│
 ├── tools/
-│   └── simulator/            # Gera dados de telemetria automaticamente
+│   └── simulator/
 │       ├── src/
 │       │   ├── config.ts
 │       │   ├── vehicle.ts
@@ -280,9 +290,9 @@ fleet-monitoring-platform/
 │       │   └── index.ts
 │       ├── package.json
 │       └── tsconfig.json
-│
 └── scripts/
-    └── init.sql              # Script de inicialização do banco
+    └── init.sql
+
 
 
 🧪 Testando o Sistema Completo
