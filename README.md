@@ -232,6 +232,7 @@ fleet-monitoring-platform/
 ├── .env.example
 ├── .gitignore
 ├── README.md
+│
 ├── services/
 │   ├── api-gateway/
 │   │   ├── src/
@@ -246,9 +247,11 @@ fleet-monitoring-platform/
 │   │   │   └── server.ts
 │   │   ├── package.json
 │   │   └── tsconfig.json
+│   │
 │   ├── worker-telemetry/
 │   │   ├── src/
 │   │   │   ├── config/
+│   │   │   │   └── env.ts
 │   │   │   ├── db/
 │   │   │   │   ├── postgres.ts
 │   │   │   │   └── redis.ts
@@ -256,15 +259,21 @@ fleet-monitoring-platform/
 │   │   │   └── index.ts
 │   │   ├── package.json
 │   │   └── tsconfig.json
+│   │
 │   ├── worker-alerts/
 │   │   ├── src/
 │   │   │   ├── config/
+│   │   │   │   └── env.ts
 │   │   │   ├── redis/
+│   │   │   │   └── subscriber.ts
 │   │   │   ├── websocket/
+│   │   │   │   └── server.ts
 │   │   │   ├── rules/
+│   │   │   │   └── engine.ts
 │   │   │   └── index.ts
 │   │   ├── package.json
 │   │   └── tsconfig.json
+│   │
 │   └── frontend-web/
 │       ├── src/
 │       │   ├── components/
@@ -275,12 +284,14 @@ fleet-monitoring-platform/
 │       │   ├── services/
 │       │   │   └── socket.ts
 │       │   ├── types/
+│       │   │   └── index.ts
 │       │   ├── App.tsx
 │       │   └── main.tsx
 │       ├── index.html
 │       ├── package.json
 │       ├── vite.config.ts
 │       └── tsconfig.json
+│
 ├── tools/
 │   └── simulator/
 │       ├── src/
@@ -290,6 +301,7 @@ fleet-monitoring-platform/
 │       │   └── index.ts
 │       ├── package.json
 │       └── tsconfig.json
+│
 └── scripts/
     └── init.sql
 
