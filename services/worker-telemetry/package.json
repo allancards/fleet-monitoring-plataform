@@ -1,0 +1,25 @@
+{
+  "name": "worker-telemetry",
+  "version": "1.0.0",
+  "description": "Consome eventos de telemetria, salva no Redis e PostGIS",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "pg": "^8.12.0",
+    "redis": "^4.6.14",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.5",
+    "@types/node": "^20.14.10",
+    "@types/pg": "^8.11.6",
+    "tsx": "^4.16.5",
+    "typescript": "^5.5.3"
+  }
+}
