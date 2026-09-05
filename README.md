@@ -171,45 +171,50 @@ Uma plataforma completa de monitoramento de frotas veiculares em tempo real, bas
         ```
 
 🗄️ Estrutura do Banco de Dados
-- Tabela vehicles
+- **Tabela vehicles**
 
-Coluna	Tipo	Descrição
-id	VARCHAR(36) PK	Identificador único do veículo
-plate	VARCHAR(20) NOT NULL	Placa do veículo (única)
-model	VARCHAR(100) NOT NULL	Modelo do veículo
-status	VARCHAR(20) DEFAULT 'ACTIVE'	Situação do veículo
-created_at	TIMESTAMPTZ DEFAULT NOW()	Data de cadastro
+  **Coluna** | **Tipo** | **Descrição**
+  --- | --- | ---
+  id | VARCHAR(36) PK | Identificador único do veículo
+  plate | VARCHAR(20) NOT NULL | Placa do veículo (única)
+  model | VARCHAR(100) NOT NULL | Modelo do veículo
+  status | VARCHAR(20) DEFAULT 'ACTIVE' | Situação do veículo
+  created_at | TIMESTAMPTZ DEFAULT NOW() | Data de cadastro
 
+---
 
-- Tabela telemetry_history
-Coluna	        Tipo	                    Descrição
-id	          BIGSERIAL PK	              Identificador único
-vehicle_id	  VARCHAR(36) FK (vehicles)	   Veículo associado
-latitude	    DOUBLE PRECISION	          Latitude do ponto
-longitude	    DOUBLE PRECISION	          Longitude do ponto
-location	    GEOMETRY(Point, 4326)	      Ponto geográfico (PostGIS)
-speed	        DOUBLE PRECISION	           Velocidade em km/h
-ignition	    BOOLEAN	                    Estado da ignição
-timestamp	    TIMESTAMPTZ	                Data/hora do evento
-created_at	  TIMESTAMPTZ	                Data de inserção
+- **Tabela telemetry_history**
 
-Índices:
+  **Coluna** | **Tipo** | **Descrição**
+  --- | --- | ---
+  id | BIGSERIAL PK | Identificador único
+  vehicle_id | VARCHAR(36) FK (vehicles) | Veículo associado
+  latitude | DOUBLE PRECISION | Latitude do ponto
+  longitude | DOUBLE PRECISION | Longitude do ponto
+  location | GEOMETRY(Point, 4326) | Ponto geográfico (PostGIS)
+  speed | DOUBLE PRECISION | Velocidade em km/h
+  ignition | BOOLEAN | Estado da ignição
+  timestamp | TIMESTAMPTZ | Data/hora do evento
+  created_at | TIMESTAMPTZ | Data de inserção
 
-    idx_telemetry_location (GIST) para consultas espaciais.
+  **Índices:**
+  * `idx_telemetry_location` (GIST) para consultas espaciais.
+  * `idx_telemetry_vehicle_time` (vehicle_id, timestamp DESC) para consultas por veículo/período.
 
-    idx_telemetry_vehicle_time (vehicle_id, timestamp DESC) para consultas por veículo/período.
+---
 
-- Tabela fleet_alerts
-Coluna	        Tipo	            Descrição
-id	          BIGSERIAL PK	      Identificador único
-vehicle_id	  VARCHAR(36) FK	    Veículo associado
-type	        VARCHAR(50)	        Tipo de alerta (ex: SPEED_LIMIT)
-severity	    VARCHAR(20)	        INFO / WARNING / CRITICAL
-message	        TEXT	            Mensagem descritiva
-payload	      JSONB	              Dados adicionais (opcional)
-timestamp	    TIMESTAMPTZ	        Data/hora do evento
-created_at	  TIMESTAMPTZ	          Data de inserção
+- **Tabela fleet_alerts**
 
+  **Coluna** | **Tipo** | **Descrição**
+  --- | --- | ---
+  id | BIGSERIAL PK | Identificador único
+  vehicle_id | VARCHAR(36) FK | Veículo associado
+  type | VARCHAR(50) | Tipo de alerta (ex: SPEED_LIMIT)
+  severity | VARCHAR(20) | INFO / WARNING / CRITICAL
+  message | TEXT | Mensagem descritiva
+  payload | JSONB | Dados adicionais (opcional)
+  timestamp | TIMESTAMPTZ | Data/hora do evento
+  created_at | TIMESTAMPTZ | Data de inserção
 
 🔌 WebSocket (Socket.IO)
 
@@ -226,7 +231,7 @@ Eventos que o cliente pode enviar:
 
 
 📁 Estrutura do Projeto (Monorepo)
-
+```text
 fleet-monitoring-platform/
 ├── docker-compose.yml
 ├── .env.example
@@ -304,7 +309,7 @@ fleet-monitoring-platform/
 │
 └── scripts/
     └── init.sql
-
+```
 
 
 🧪 Testando o Sistema Completo
