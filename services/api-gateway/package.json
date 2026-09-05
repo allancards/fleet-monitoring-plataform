@@ -1,0 +1,28 @@
+{
+  "name": "fleet-monitoring-platform",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "dev:gateway": "cd services/api-gateway && npm run dev",
+    "dev:worker": "cd services/worker-telemetry && npm run dev",
+    "dev:frontend": "cd services/frontend-web && npm run dev"
+  },
+  "dependencies": {
+    "@fastify/cors": "11.3.0",
+    "amqplib": "^0.10.5",
+    "fastify": "^5.0.0",
+    "fastify-type-provider-zod": "7.0.0",
+    "zod": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.4",
+    "@types/node": "^22.17.3",
+    "pino-pretty": "^11.2.2",
+    "tsx": "^4.23.13",
+    "typescript": "^5.5.4"
+  }
+}
